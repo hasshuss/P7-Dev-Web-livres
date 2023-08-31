@@ -5,6 +5,6 @@
 
 ### Avec npm
 
-Faites la commande `npm install` pour installer les dépendances puis `npm start` pour lancer le projet. 
+Faites la commande `npm install` pour installer les dépendances puis `npm start` pour lancer le front.
 
-Le projet a été testé sur node 19. 
+Faites 'npm install' dans le dossier back pour installer le back et ses dépendances, puis 'npm start' pour lancer le serveur backend.
