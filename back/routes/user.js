@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
-
-// Import du contrôleur associé aux utilisateurs
 const userCtrl = require('../controllers/user');
+const { limiter100, limiter50 } = require('../middlewares/apiLimiter');
 
-// Routes d'inscription et de connexion
-router.post('/signup', userCtrl.signup);
-router.post('/login', userCtrl.login);  // Vous n'avez pas encore fourni la logique de cette fonction, assurez-vous de l'ajouter dans votre contrôleur plus tard.
+router.post('/signup', (req, res, next) => {
+    console.log('Signup route atteinte');
+    next();
+}, limiter50, userCtrl.signup);
+router.post('/login',limiter100, userCtrl.login);  
 
 module.exports = router;
