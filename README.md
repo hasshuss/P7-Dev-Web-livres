@@ -1,5 +1,6 @@
 # Mon vieux Grimoire
 
+Projet 07 du parcours developpeur web OpenClassRoom
 
 ## Comment lancer le projet ? 
 
