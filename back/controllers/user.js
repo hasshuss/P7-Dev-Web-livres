@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
-
 const User = require('../models/user');
+require('dotenv').config();
+
 
 exports.signup = (req, res, next) => {
     if (!req.body.password) {
@@ -35,9 +36,10 @@ exports.signup = (req, res, next) => {
                       if (!valid) {
                           return res.status(401).json({ message: 'Paire login/mot de passe incorrecte' });
                       }
+                      const secretkey = process.env.RANDOM_SECRET_KEY;
                       const token = jwt.sign(
                           { userId: user._id },
-                          'RANDOM_SECRET_KEY', 
+                          secretkey, 
                           { expiresIn: '24h' } 
                       );
                       res.status(200).json({

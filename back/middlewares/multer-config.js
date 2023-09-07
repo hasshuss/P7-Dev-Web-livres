@@ -1,4 +1,6 @@
 const multer = require('multer');
+const sharp = require('sharp');
+const { DeleteFile } = require('./DeleteFile');
 
 const MIME_TYPES = {
     'image/jpg': 'jpg',
@@ -13,9 +15,44 @@ const storage = multer.diskStorage({
     filename: (req, file, callback) => {
         const name = file.originalname.split(' ').join('_');
         const extension = MIME_TYPES[file.mimetype];
-        callback(null, name + Date.now() + '.' + extension);
-        console.log("image convertie")
-    },
+        const finalName = name + Date.now() + '.' + extension;
+        callback(null, finalName);
+    }
 });
 
-module.exports = multer({ storage: storage }).single('image');
+const fileFilter = (req, file, cb) => {
+    if (!file.mimetype.startsWith('image')) {
+        return cb(new Error('Veuillez télécharger uniquement des images.'), false);
+    }
+    cb(null, true);
+};
+
+const upload = multer({
+    storage: storage,
+    fileFilter: fileFilter
+}).single('image');
+
+module.exports = (req, res, next) => {
+    upload(req, res, function(err) {
+        if (err) {
+            return res.send(err);
+        }
+        if (req.file) {
+            const imagePath = 'images/' + req.file.filename;
+            sharp(imagePath)
+            .resize(500)  
+            .toFile('images/resized_' + req.file.filename, (err, info) => {
+                if (err) {
+                    return next(err);
+                }
+                req.file.filename = 'resized_' + req.file.filename;
+                DeleteFile(imagePath)
+        
+                console.log('Image redimensionnée');
+                next();
+            });
+        } else {
+            next();
+        }
+    });
+};

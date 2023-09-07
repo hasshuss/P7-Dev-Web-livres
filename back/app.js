@@ -3,16 +3,21 @@ const mongoose = require('mongoose');
 const app = express();
 const cors = require('cors');
 const multerConfig = require('./middlewares/multer-config'); 
+const bodyParser = require('body-parser');
+require('dotenv').config();
+
+
 
 
 app.use(cors());
-var n = 0
+
+let n = 0
 
 // Middleware pour afficher les requêtes reçues
 app.use((req, res, next) => {
-    console.log('Requête reçue :', req.method, req.path);
-     n = n + 1
-     console.log(n)
+  console.log('Requête reçue', 'méthode: ' + req.method, 'path:' + req.path, 'ip:' + req.ip );
+  n = n + 1
+     console.log('nombre totale de requêtes : ' + n)
     next();
 });
 
@@ -32,10 +37,10 @@ const path = require('path');
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 
-
+const dbUrl = process.env.DATABASE_URL;
 
 // Connexion à MongoDB
-mongoose.connect('mongodb+srv://hasscrpt:DK3YcBJjzCTjqIhS@cluster0.l7fobve.mongodb.net/?retryWrites=true&w=majority',
+mongoose.connect(dbUrl,
     { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('Connexion à MongoDB réussie !'))
     .catch((err) => console.log('Connexion à MongoDB échouée !', err));

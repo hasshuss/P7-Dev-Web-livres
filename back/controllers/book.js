@@ -53,7 +53,6 @@ exports.rateBook = (req, res, next) => {
 
     const grade = parseFloat(req.body.rating);
 
-    console.log(grade)
     if (isNaN(grade)) {
         return res.status(400).json({ message: 'Veuillez fournir une note valide.' });
     }
@@ -97,13 +96,11 @@ exports.DeleteBook = (req, res, next) => {
 
 
 exports.getBestRating = async (req, res, next) => {
-    console.log("requête bestrating reçue")
     try {
         const books = await Book.find()
             .sort({ averageRating: -1 })
             .limit(3);
         res.status(200).json(books);
-        console.log(books);
 
     } catch (error) {
         res.status(500).json({ error: 'Une erreur s’est produite lors de la récupération des livres.' });
